@@ -5,13 +5,62 @@
   <p>Indica sus características y adjunta una fotografía exterior para estimar su estado.</p>
   {% if error %}<p class="alert">{{ error }}</p>{% endif %}
 
-  {# TODO C2: ESCRIBID VOSOTROS EL FORMULARIO HTML COMPLETO.
-     No hay formulario de ejemplo resuelto en este archivo.
-     Consultad GUIA_ALUMNADO.md, etapa 4, y docs/CONTRATO_COMPONENTES.md.
-     Requisitos: POST /tasar, multipart, seis campos, foto, botón enviar.
-     Los select se rellenan a partir de opciones.marcas/combustibles/tipos/transmisiones.
-     Las categorías de estado NO son seleccionables por el usuario.
-  #}
+  <form method="post" action="/tasar" enctype="multipart/form-data">
+    <div class="grid">
+      <div>
+        <label for="manufacturer">Marca</label>
+        <select id="manufacturer" name="manufacturer" required>
+          <option value="" disabled selected>Selecciona una marca</option>
+          {% for marca in opciones.marcas %}
+          <option value="{{ marca }}">{{ marca|title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="year">Año</label>
+        <input id="year" name="year" type="number" min="1995" max="2021" step="1" placeholder="2016" required>
+      </div>
+      <div>
+        <label for="odometer">Kilometraje (millas)</label>
+        <input id="odometer" name="odometer" type="number" min="1000" max="250000" step="1" placeholder="80000" required>
+        <p class="hint">En millas, no en kilómetros.</p>
+      </div>
+      <div>
+        <label for="fuel">Combustible</label>
+        <select id="fuel" name="fuel" required>
+          <option value="" disabled selected>Selecciona combustible</option>
+          {% for combustible in opciones.combustibles %}
+          <option value="{{ combustible }}">{{ combustible|title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="type">Carrocería</label>
+        <select id="type" name="type" required>
+          <option value="" disabled selected>Selecciona tipo</option>
+          {% for tipo in opciones.tipos %}
+          <option value="{{ tipo }}">{{ tipo|title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="transmission">Transmisión</label>
+        <select id="transmission" name="transmission" required>
+          <option value="" disabled selected>Selecciona transmisión</option>
+          {% for transmision in opciones.transmisiones %}
+          <option value="{{ transmision }}">{{ transmision|title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
 
+    <div style="margin-top:15px">
+      <label for="foto">Fotografía exterior</label>
+      <input id="foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" required>
+      <p class="hint">JPG, PNG o WEBP · máximo 5 MB. La imagen no se almacena.</p>
+    </div>
+
+    <p style="margin-top:18px"><button type="submit">Estimar precio</button></p>
+  </form>
 </section>
 {% endblock %}
