@@ -3,6 +3,7 @@ import base64
 import json
 import os
 import re
+import cohere
 from .config import ESTADOS
 
 MODELO_VISION = "command-a-vision-07-2025"
@@ -57,7 +58,6 @@ def clasificar_estado(contenido: bytes, mimetype: str) -> tuple[str, str, str]:
         raise VisionError("Falta COHERE_API_KEY en el archivo .env")
     if not PROMPT.strip():
         raise VisionError("Falta redactar el prompt visual: tarea C1-A.")
-    import cohere
 
     data_url = f"data:{mimetype};base64,{base64.b64encode(contenido).decode('utf-8')}"
     try:
@@ -77,9 +77,12 @@ def clasificar_estado(contenido: bytes, mimetype: str) -> tuple[str, str, str]:
         if not respuesta.message or not respuesta.message.content:
             raise VisionError("Cohere devolvió una respuesta vacía.")
         bloque = respuesta.message.content[0]
-        texto = getattr(bloque, "text", "") or str(bloque)
+        texto = getattr(bloque, "text", None)
+        if not texto:
+            raise VisionError("Cohere devolvió un bloque de contenido sin texto.")
         estado, razon = parsear_respuesta(texto)
         return estado, razon, "COHERE"
+
     except VisionError:
         raise
     except Exception as exc:
