@@ -17,7 +17,7 @@
 - [x] Formulario POST sin JavaScript; fotografía recibida en Flask.
 - [x] Modo `MOCK` integra modelo ML + SQLAlchemy y guarda tasación.
 - [x] `/historial` muestra la tasación.
-- [x] Modo real Cohere (`VISION_MOCK=0`): código multimodal implementado al completo (`cohere.ClientV2`, Base64, control de excepciones). **No se pudo probar con una clave/cuota activa**; el circuito completo se verificó con `VISION_MOCK=1` y la incidencia se documenta sin presentar el mock como análisis real.
+- [x] Modo real Cohere (`VISION_MOCK=0`): **probado el 4 nov 2026** con `command-a-vision-07-2025`. Foto clara → `excellent`, fuente `COHERE`, tasación #9 (14.583 USD). Imagen insuficiente → `unknown`, HTTP 400 y **sin tasación guardada**. Capturas en `docs/capturas_cohere/`.
 - [x] `docker compose exec app pytest -q`: **6 tests superados (6/6 passed)**.
 - [x] `.env` no está versionado.
 - [x] Prompt propio escrito en `app/vision.py` (vocabulario cerrado, sin inferir mecánica, salida JSON estricta).
@@ -39,7 +39,6 @@ Se interrumpe inmediatamente el flujo de tasación con un error descriptivo y HT
 
 ## Incidencias que no pudimos resolver (si las hay)
 
-- Prueba real de Cohere: sin clave/cuota activa en el entorno de evaluación; se verificó el circuito completo en modo `MOCK` y se documenta la incidencia sin falsear el resultado.
 - En macOS el puerto 5000 estaba ocupado por el receptor de AirPlay; la aplicación se probó en el host con el puerto 5001 mediante un override temporal no versionado. En Linux (NixOS) se usa el 5000 estándar.
 - `nbconvert` avisa de que el notebook no tiene `id` de celda (nbformat); es un aviso no bloqueante y la ejecución termina correctamente.
 
